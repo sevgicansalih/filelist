@@ -1,9 +1,14 @@
+import os
+import pwd
+import sys
+import datetime
+import subprocess
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
 
 class Command():
 	"""docstring for Command"""
 	
-	def __init__(self, commandType, parameters):
+	def __init__(self, commandType, pathlist,parameter):
 		#super(Command, self).__init__()
 		if(commandType == optionsList[0]):
 			self.commandType = 1
@@ -27,13 +32,72 @@ class Command():
 			self.commandType = 10
 		elif(commandType == optionsList[10]):
 			self.commandType = 11				
-		self.parameters = parameters
+		self.pathlist = pathlist
+		self.parameter = parameter
 
 	def getCommandType(self):
 		return self.commandType
-	def getParameters(self):
-		return self.parameters
+	def getParameter(self):
+		return self.parameter
+	def getPathlist(self):
+		return self.pathlist
 	def setCommandType(self,commandType):
 		self.commandType = commandType
-	def setParameters(self,parameters):
-		self.parameters = parameters
+	def setParameter(self,parameter):
+		self.parameter = parameter
+
+	def createCommand(self):
+		if(self.commandType == 1):
+			createBefore(self)
+		elif(self.commandType == 2):
+			createAfter(self)
+		elif(self.commandType == 3):
+			createMatch(self)
+		elif(self.commandType == 4):
+			createBigger(self)
+		elif(self.commandType == 5):
+			createSmaller(self)
+		elif(self.commandType == 6):
+			createDelete(self)
+		elif(self.commandType == 7):
+			createZip(self)
+		elif(self.commandType == 8):
+			createDuplcont(self)
+		elif(self.commandType == 9):
+			createDuplname(self)
+		elif(self.commandType == 10):
+			createStats(self)
+		elif(self.commandType == 11):
+			createNofile(self)
+
+	def createBefore(self):
+		filepath = getDir()
+
+	def createAfter(self):
+		pass
+	def createMatch(self):
+		pass
+	def createBigger(self):
+		pass
+	def createSmaller(self):
+		pass
+	def createDelete(self):
+		pass
+	def createZip(self):
+		pass
+	def createDuplcont(self):
+		pass
+	def createDuplname(self):
+		pass
+	def createStats(self):
+		pass
+	def createNofile(self):
+		pass
+
+def executeCommand(command):
+	#os.system(command)
+	#output = subprocess.check_output(command,shell=True)
+	#print output
+	pass
+def getDir():
+	return subprocess.check_output('pwd',shell=True)
