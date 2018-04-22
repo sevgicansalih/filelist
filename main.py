@@ -17,14 +17,11 @@ baseDir = ""
 def main():
 	baseDir = getDir()
 	getArguments()
-	#createCommand()
+	# alttaki iki command lazim olmayabilir onun yerine intersect kullanabiliriz.
+	
+	#createCommand() 
 	#executeCommand(resultCommand)
 
-def createCommand():
-	for com in commandList:
-		resultCommand.append(com.createCommand())
-		resultCommand.append('&&')
-	resultCommand = resultCommand[:-2] # last two && is deleted
 
 def getArguments():
 
@@ -62,18 +59,6 @@ def getArguments():
 						pathlist = []
 					i -= 1
 
-				# Check for options and parameters
-				#Gets options and parameters 2 by 2. ASSUMPTION IS MADE : every option gets one parameter.
-				"""
-				for index,token in enumerate(commandTokens):
-					if index != 0: # enumarate yaparken list size degismez ondan olmaz
-						if token[0] == '-' and :
-							pass
-
-				
-				for x in range(len(commandTokens)/2):
-					commandList.append(Command(commandTokens[2*x+1],commandTokens[2*x+2]))
-				"""
 				for com in commandList:
 					print com.getCommandType(),' ',com.getParameter(),' ',com.getPathlist()
 		del commandList[:]
@@ -94,6 +79,11 @@ def executeCommand(command):
 	os.system(command)
 	#output = subprocess.check_output(command,shell=True)
 	#print output
+def createCommand():
+	for com in commandList:
+		resultCommand.append(com.createCommand())
+		resultCommand.append('&&')
+	resultCommand = resultCommand[:-2] # last two && is deleted
 
 def getDir():
 	return subprocess.check_output('pwd',shell=True)

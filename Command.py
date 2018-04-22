@@ -5,6 +5,10 @@ import datetime
 import subprocess
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
 
+# TODO
+# Buradaki createBefore gibi optiona bagli parametreler directory traverse edip match eden file listleri donecek,
+# main.py da tum donen file list'lerin intersectini alip bastiracagiz ya da verilen komutu yapacagiz, delete , zip , stats gibi, sadece bu ikisi var sanirim
+
 class Command():
 	"""docstring for Command"""
 	
@@ -41,10 +45,6 @@ class Command():
 		return self.parameter
 	def getPathlist(self):
 		return self.pathlist
-	def setCommandType(self,commandType):
-		self.commandType = commandType
-	def setParameter(self,parameter):
-		self.parameter = parameter
 
 	def createCommand(self):
 		if(self.commandType == 1):
