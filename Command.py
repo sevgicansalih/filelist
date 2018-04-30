@@ -5,12 +5,13 @@ import datetime
 import subprocess
 from collections import deque
 
-import timestring
-
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
 
-beforeFiles = []
-afterFiles = []
+current_files = []
+global_files = []
+
+stats = [-1, 0, -1, 0] #total number of files visited, total size of files visited, total number of files listed, total size of files listed
+
 # TODO
 # Buradaki createBefore gibi optiona bagli parametreler directory traverse edip match eden file listleri donecek,
 # main.py da tum donen file list'lerin intersectini alip bastiracagiz ya da verilen komutu yapacagiz, delete , zip , stats gibi, sadece bu ikisi var sanirim
@@ -22,7 +23,27 @@ def file_traverser (qlist):
 		for files in os.walk(currentdir, topdown=False):
 			for file in files[2]:
 				file_names.append(files[0] + '/' + file)
+
+	if stats[0] == -1:
+		update_stats(file_names, 0)
 	return file_names
+
+def update_stats(file_names, format): #format:0 total format:1 listed
+	if format == 0:
+		stats[0] = len(file_names)
+		for file in file_names:
+			st = os.stat(file)
+			filesize = st.st_size
+			stats[1] = stats[1] + filesize
+	else:
+		stats[2] = len(file_names)
+		for file in file_names:
+			st = os.stat(file)
+			filesize = st.st_size
+			stats[3] = stats[3] + filesize
+
+def intersection(lst1, lst2):
+    return list(set(lst1) & set(lst2))
 
 class Command():
 	"""docstring for Command"""
@@ -87,30 +108,41 @@ class Command():
 			self.createNofile()
 
 	def createBefore(self):
+		print 'cbcbcbc'
+		global global_files
+		global current_files
 		param = self.parameter
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
-		file_names = file_traverser(qlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 		print file_names
 		for file in file_names:
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
 			print datetime.datetime.fromtimestamp(modtime).strftime('%Y%m%dT%H%M%S')
 			if filetime < date : 
-				beforeFiles.append(file)
+				current_files.append(file)
+		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
+		current_files = []
+		print global_files
 
 	def createAfter(self):
+		print 'cacacaca'
+		global global_files
+		global current_files
 		param = self.parameter
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
-		file_names = file_traverser(qlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 		print file_names
 		for file in file_names:
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
 			print datetime.datetime.fromtimestamp(modtime).strftime('%Y%m%dT%H%M%S')
 			if filetime > date : 
-				afterFiles.append(file)
+				current_files.append(file)
+		global_files = current_files[:] if len(current_files) == 0 else intersection(global_files, current_files)
+		current_files = []
 	def createMatch(self):
 		pass
 	def createBigger(self):
