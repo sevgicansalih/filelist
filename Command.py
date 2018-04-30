@@ -10,6 +10,15 @@ optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip'
 # Buradaki createBefore gibi optiona bagli parametreler directory traverse edip match eden file listleri donecek,
 # main.py da tum donen file list'lerin intersectini alip bastiracagiz ya da verilen komutu yapacagiz, delete , zip , stats gibi, sadece bu ikisi var sanirim
 
+def file_traverser (qlist):
+	file_names = []
+	while qlist:
+		currentdir = qlist.popleft()
+		for files in os.walk(currentdir, topdown=False):
+			for file in files[2]:
+				file_names.append(files[0] + '/' + file)
+	return file_names
+
 class Command():
 	"""docstring for Command"""
 	
@@ -74,9 +83,9 @@ class Command():
 
 	def createBefore(self):
 		qlist = deque(self.pathlist)
-		currentdir = qlist.popleft()
-		for files in os.walk(currentdir, topdown=False):
-			print files[0]
+		file_names = file_traverser(qlist)
+		
+		print file_names
 
 	def createAfter(self):
 		pass
