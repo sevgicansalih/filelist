@@ -53,8 +53,9 @@ class Command():
 			self.commandType = 11				
 		self.pathlist = pathlist
 		self.parameter = parameter
-		self.createCommand()
-		
+		# Burasi execute ettigimiz yer burayi sortladiktan sonra teker teker cagiracagiz
+		#self.createCommand()
+
 	def getCommandType(self):
 		return self.commandType
 	def getParameter(self):
