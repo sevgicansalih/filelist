@@ -50,7 +50,7 @@ def getArguments():
 				while -1*i<size:
 					temp = commandTokens[i]
 					if isPath(commandTokens,i):
-						pathlist.append(commandTokens[i])
+						pathlist.append( baseDir+'/'+commandTokens[i])
 					if isOption(commandTokens,i):
 						if commandTokens[i] in optionsWithParameters:
 							commandList.append(Command(commandTokens[i],pathlist,commandTokens[i+1]))
