@@ -146,19 +146,25 @@ class Command():
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
 		print 'gb\n' , global_files
+
 	def createMatch(self):
+		print 'match'
+		global global_files
+		global current_files
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 		pattern = self.parameter
-		print 'pattern ', pattern
-		curentList = []
+		#print 'pattern ', pattern
 		prog = re.compile(pattern,re.DOTALL)
 		for file in file_names:
 			index = file.rfind('/')
 			filename = file[index+1:] if index != 1 else file
 			result = bool(prog.search(file))
-			print result, " ", filename
-
+			if result:
+				current_files.append(file)
+		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
+		current_files = []
+		print 'gb\n' , global_files
 
 	def createBigger(self):
 		print 'bigger'
@@ -171,13 +177,12 @@ class Command():
 		for file in file_names:
 			st = os.stat(file)
 			filesize = st.st_size
-			print(file)
-			print(filesize)
 			if filesize >= int(param) : 
 				current_files.append(file)
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
 		print 'gb\n' , global_files
+
 	def createSmaller(self):
 		print 'smaller'
 		global global_files
@@ -194,6 +199,7 @@ class Command():
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
 		print 'gb\n' , global_files
+
 	def createDelete(self):
 		print 'delete'
 		global global_files
@@ -204,6 +210,7 @@ class Command():
 
 		for file in file_names:
 			os.remove(file)
+
 	def createZip(self):
 		print 'zip'
 		global global_files
@@ -218,6 +225,7 @@ class Command():
 			zipf.write(file)
 
 		zipf.close()
+
 	def createDuplcont(self):
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
