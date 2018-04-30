@@ -3,6 +3,7 @@ import pwd
 import sys
 import datetime
 import subprocess
+import zipfile
 from collections import deque
 
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
@@ -116,6 +117,7 @@ class Command():
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		#print file_names
 		for file in file_names:
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
@@ -123,7 +125,6 @@ class Command():
 				current_files.append(file)
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
-		print global_files
 		print 'gb\n' , global_files
 
 	def createAfter(self):
@@ -134,6 +135,7 @@ class Command():
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		#print file_names
 		for file in file_names:
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
@@ -181,7 +183,19 @@ class Command():
 	def createDelete(self):
 		pass
 	def createZip(self):
-		pass
+		print 'zip'
+		global global_files
+		global current_files
+		param = self.parameter
+		zipf = zipfile.ZipFile(param, 'w', zipfile.ZIP_DEFLATED)
+		
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+
+		for file in file_names:
+			zipf.write(file)
+
+		zipf.close()
 	def createDuplcont(self):
 		pass
 	def createDuplname(self):
