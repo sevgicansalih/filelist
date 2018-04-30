@@ -56,9 +56,8 @@ def getArguments():
 							commandList.append(Command(commandTokens[i],pathlist,commandTokens[i+1]))
 						else:
 							commandList.append(Command(commandTokens[i],pathlist,None))
-						pathlist = []
 					i -= 1
-
+					# pathlist = []
 				for com in commandList:
 					print com.getCommandType(),' ',com.getParameter(),' ',com.getPathlist()
 		del commandList[:]
