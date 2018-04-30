@@ -3,6 +3,7 @@ import pwd
 import sys
 import datetime
 import subprocess
+from collections import deque
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
 
 # TODO
@@ -38,6 +39,7 @@ class Command():
 			self.commandType = 11				
 		self.pathlist = pathlist
 		self.parameter = parameter
+		self.createCommand()
 
 	def getCommandType(self):
 		return self.commandType
@@ -48,30 +50,33 @@ class Command():
 
 	def createCommand(self):
 		if(self.commandType == 1):
-			createBefore(self)
+			self.createBefore()
 		elif(self.commandType == 2):
-			createAfter(self)
+			self.createAfter()
 		elif(self.commandType == 3):
-			createMatch(self)
+			self.createMatch()
 		elif(self.commandType == 4):
-			createBigger(self)
+			self.createBigger()
 		elif(self.commandType == 5):
-			createSmaller(self)
+			self.createSmaller()
 		elif(self.commandType == 6):
-			createDelete(self)
+			self.createDelete()
 		elif(self.commandType == 7):
-			createZip(self)
+			self.createZip()
 		elif(self.commandType == 8):
-			createDuplcont(self)
+			self.createDuplcont()
 		elif(self.commandType == 9):
-			createDuplname(self)
+			self.createDuplname()
 		elif(self.commandType == 10):
-			createStats(self)
+			self.createStats()
 		elif(self.commandType == 11):
-			createNofile(self)
+			self.createNofile()
 
 	def createBefore(self):
-		filepath = getDir()
+		qlist = deque(self.pathlist)
+		currentdir = qlist.popleft()
+		for files in os.walk(currentdir, topdown=False):
+			print files[0]
 
 	def createAfter(self):
 		pass
