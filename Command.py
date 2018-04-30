@@ -12,7 +12,7 @@ optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip'
 current_files = []
 global_files = []
 dictDuplcont = {}
-
+dictDuplname = {}
 stats = [-1, 0, -1, 0] #total number of files visited, total size of files visited, total number of files listed, total size of files listed
 
 # TODO
@@ -242,7 +242,18 @@ class Command():
 		#print set(chain.from_iterable(values for key, values in rev_multidict.items() if len(values) > 1))
 
 	def createDuplname(self):
-		pass
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		for file_path in file_names:
+			index = file_path.rfind('/')
+			filename = file_path[index+1:] if index != 1 else file_path
+			dictDuplname[file_path] = filename
+
+		rev_multidict = {}
+		for key, value in dictDuplname.items():
+			rev_multidict.setdefault(value, set()).add(key)
+		
+		print [values for key, values in rev_multidict.items() if len(values) > 1]
 	def createStats(self):
 		pass
 	def createNofile(self):
