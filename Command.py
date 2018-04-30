@@ -9,6 +9,8 @@ import timestring
 
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
 
+beforeFiles = []
+afterFiles = []
 # TODO
 # Buradaki createBefore gibi optiona bagli parametreler directory traverse edip match eden file listleri donecek,
 # main.py da tum donen file list'lerin intersectini alip bastiracagiz ya da verilen komutu yapacagiz, delete , zip , stats gibi, sadece bu ikisi var sanirim
@@ -52,7 +54,7 @@ class Command():
 		self.pathlist = pathlist
 		self.parameter = parameter
 		self.createCommand()
-
+		
 	def getCommandType(self):
 		return self.commandType
 	def getParameter(self):
@@ -86,7 +88,6 @@ class Command():
 
 	def createBefore(self):
 		param = self.parameter
-
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
 		file_names = file_traverser(qlist)
@@ -95,10 +96,21 @@ class Command():
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
 			print datetime.datetime.fromtimestamp(modtime).strftime('%Y%m%dT%H%M%S')
-			print " is before ", filetime < date
+			if filetime < date : 
+				beforeFiles.append(file)
 
 	def createAfter(self):
-		pass
+		param = self.parameter
+		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
+		qlist = deque(self.pathlist)
+		file_names = file_traverser(qlist)
+		print file_names
+		for file in file_names:
+			modtime = os.path.getmtime(file)
+			filetime = datetime.datetime.fromtimestamp(modtime)
+			print datetime.datetime.fromtimestamp(modtime).strftime('%Y%m%dT%H%M%S')
+			if filetime > date : 
+				afterFiles.append(file)
 	def createMatch(self):
 		pass
 	def createBigger(self):
