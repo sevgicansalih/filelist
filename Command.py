@@ -181,14 +181,22 @@ class Command():
 		current_files = []
 		print 'gb\n' , global_files
 	def createDelete(self):
-		pass
+		print 'delete'
+		global global_files
+		global current_files
+		param = self.parameter
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+
+		for file in file_names:
+			os.remove(file)
 	def createZip(self):
 		print 'zip'
 		global global_files
 		global current_files
 		param = self.parameter
 		zipf = zipfile.ZipFile(param, 'w', zipfile.ZIP_DEFLATED)
-		
+
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 
