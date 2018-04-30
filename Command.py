@@ -3,17 +3,15 @@ import pwd
 import sys
 import datetime
 import subprocess
-<<<<<<< HEAD
 import re
-=======
 import zipfile
->>>>>>> 10ce0a71e515ac0c188effb101b9c29ad72b0d52
 from collections import deque
 
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
 
 current_files = []
 global_files = []
+dictDuplcont = {}
 
 stats = [-1, 0, -1, 0] #total number of files visited, total size of files visited, total number of files listed, total size of files listed
 
@@ -147,11 +145,7 @@ class Command():
 				current_files.append(file)
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
-<<<<<<< HEAD
-
-=======
 		print 'gb\n' , global_files
->>>>>>> 10ce0a71e515ac0c188effb101b9c29ad72b0d52
 	def createMatch(self):
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
@@ -225,7 +219,20 @@ class Command():
 
 		zipf.close()
 	def createDuplcont(self):
-		pass
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+
+		for file in file_names:
+			with open(file, 'r') as content_file:
+				content = content_file.read()
+				dictDuplcont[file] = content
+		rev_multidict = {}
+		for key, value in dictDuplcont.items():
+			rev_multidict.setdefault(value, set()).add(key)
+		
+		print [values for key, values in rev_multidict.items() if len(values) > 1]
+		#print set(chain.from_iterable(values for key, values in rev_multidict.items() if len(values) > 1))
+
 	def createDuplname(self):
 		pass
 	def createStats(self):
