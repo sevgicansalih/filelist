@@ -14,7 +14,14 @@ global_files = []
 duplcont_list = []
 duplname_list = []
 
-stats = [-1, 0, -1, 0, -1, -1] #total number of files visited, total size of files visited, total number of files listed, total size of files listed
+"""
+total number of files visited, total size of files visited, total number of files listed, total size of files listed, 
+total number of unique files listed, total size of unique files,
+total number of files with unique names
+"""
+stats = [-1, 0, -1, 0, -1, 0, -1] 
+stats_text = ['Total number of files visited: ', 'Total size of files visited: ', 'Total number of files listed: ', 'Total size of files listed: ',
+ 'Total number of unique files listed: ', 'Total size of unique files: ', 'Total number of files with unique names: ']
 
 # TODO
 # Buradaki createBefore gibi optiona bagli parametreler directory traverse edip match eden file listleri donecek,
@@ -32,7 +39,7 @@ def file_traverser (qlist):
 		update_stats(file_names, 0)
 	return file_names
 
-def update_stats(file_names, format): #format:0 total format:1 listed format:2 duplcont
+def update_stats(file_names, format): #format:0 total format:1 listed format:2 duplcont format:3 duplname
 	if format == 0:
 		stats[0] = len(file_names)
 		for file in file_names:
@@ -55,6 +62,11 @@ def update_stats(file_names, format): #format:0 total format:1 listed format:2 d
 			size = size + filesizes
 		stats[4] = stats[0] - cnt
 		stats[5] = stats[1] - size
+	elif format == 3:
+		cnt = 0
+		for dupl in file_names:
+			cnt = cnt + len(dupl)
+		stats[6] = stats[0] - cnt
 
 def intersection(lst1, lst2):
     return list(set(lst1) & set(lst2))
@@ -258,10 +270,26 @@ class Command():
 			duplcont_list.append(cur_list)
 		update_stats(duplcont_list, 2)
 		print duplcont_list
-		#print set(chain.from_iterable(values for key, values in rev_multidict.items() if len(values) > 1))
 
 	def createDuplname(self):
-		pass
+		dictDuplname = {}
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		for file_path in file_names:
+			index = file_path.rfind('/')
+			filename = file_path[index+1:] if index != 1 else file_path
+			dictDuplname[file_path] = filename
+
+		rev_multidict = {}
+		for key, value in dictDuplname.items():
+			rev_multidict.setdefault(value, set()).add(key)
+		
+		for cur_set in [values for key, values in rev_multidict.items() if len(values) > 1]:
+			cur_list = list(cur_set)
+			duplname_list.append(cur_list)
+		update_stats(duplname_list, 3)
+		print duplname_list
+
 	def createStats(self):
 		pass
 	def createNofile(self):
