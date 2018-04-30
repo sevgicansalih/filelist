@@ -58,14 +58,13 @@ def getArguments():
 							commandList.append(Command(commandTokens[i],pathlist,None))
 					i -= 1
 					# pathlist = []
-				for com in commandList:
-					print com.getCommandType(),' ',com.getParameter(),' ',com.getPathlist()
-
+				commandList.append(Command('print', '', ''))
 				newlist = sorted(commandList, key=lambda x: x.commandType, reverse=False)
 				
 				for com in newlist:
 					#print 'type ',com.commandType
 					com.createCommand()
+				
 		del commandList[:]
 
 def isOption(commandTokens,i):
