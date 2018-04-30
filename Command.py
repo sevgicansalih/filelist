@@ -171,13 +171,22 @@ class Command():
 		global global_files
 		global current_files
 		param = self.parameter
+		size = 0;
+		if param[-1] == 'K':
+			size = int(param[:-1])*1024
+		elif param[-1] == 'M':
+			size = int(param[:-1])*1024*1024
+		elif param[-1] == 'G':
+			size = int(param[:-1])*1024*1024*1024
+		else:
+			size = int(param)
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 		#print file_names
 		for file in file_names:
 			st = os.stat(file)
 			filesize = st.st_size
-			if filesize >= int(param) : 
+			if filesize >= size : 
 				current_files.append(file)
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
@@ -188,13 +197,22 @@ class Command():
 		global global_files
 		global current_files
 		param = self.parameter
+		size = 0;
+		if param[-1] == 'K':
+			size = int(param[:-1])*1024
+		elif param[-1] == 'M':
+			size = int(param[:-1])*1024*1024
+		elif param[-1] == 'G':
+			size = int(param[:-1])*1024*1024*1024
+		else:
+			size = int(param)
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 		#print file_names
 		for file in file_names:
 			st = os.stat(file)
 			filesize = st.st_size
-			if filesize <= int(param) : 
+			if filesize <= size : 
 				current_files.append(file)
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []

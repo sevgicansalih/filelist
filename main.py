@@ -66,6 +66,7 @@ def getArguments():
 				for com in newlist:
 					#print 'type ',com.commandType
 					com.createCommand()
+					
 		del commandList[:]
 
 def isOption(commandTokens,i):
