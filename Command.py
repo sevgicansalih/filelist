@@ -11,9 +11,10 @@ optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip'
 
 current_files = []
 global_files = []
-dictDuplcont = {}
+duplcont_list = []
+duplname_list = []
 
-stats = [-1, 0, -1, 0] #total number of files visited, total size of files visited, total number of files listed, total size of files listed
+stats = [-1, 0, -1, 0, -1, -1] #total number of files visited, total size of files visited, total number of files listed, total size of files listed
 
 # TODO
 # Buradaki createBefore gibi optiona bagli parametreler directory traverse edip match eden file listleri donecek,
@@ -31,19 +32,29 @@ def file_traverser (qlist):
 		update_stats(file_names, 0)
 	return file_names
 
-def update_stats(file_names, format): #format:0 total format:1 listed
+def update_stats(file_names, format): #format:0 total format:1 listed format:2 duplcont
 	if format == 0:
 		stats[0] = len(file_names)
 		for file in file_names:
 			st = os.stat(file)
 			filesize = st.st_size
 			stats[1] = stats[1] + filesize
-	else:
+	elif format == 1:
 		stats[2] = len(file_names)
 		for file in file_names:
 			st = os.stat(file)
 			filesize = st.st_size
 			stats[3] = stats[3] + filesize
+	elif format == 2:
+		cnt = 0
+		size = 0
+		for dupl in file_names:
+			st = os.stat(dubl[0])
+			filesizes = st.st_size * len(dupl)
+			cnt = cnt + len(dupl)
+			size = size + filesizes
+		stats[4] = stats[0] - cnt
+		stats[5] = stats[1] - size
 
 def intersection(lst1, lst2):
     return list(set(lst1) & set(lst2))
@@ -227,6 +238,10 @@ class Command():
 		zipf.close()
 
 	def createDuplcont(self):
+		print 'duplcont'
+		global global_files
+		global duplcont_list
+		dictDuplcont = {}
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
 
@@ -238,7 +253,11 @@ class Command():
 		for key, value in dictDuplcont.items():
 			rev_multidict.setdefault(value, set()).add(key)
 		
-		print [values for key, values in rev_multidict.items() if len(values) > 1]
+		for cur_set in [values for key, values in rev_multidict.items() if len(values) > 1]:
+			cur_list = list(cur_set)
+			duplcont_list.append(cur_list)
+		update_stats(duplcont_list, 2)
+		print duplcont_list
 		#print set(chain.from_iterable(values for key, values in rev_multidict.items() if len(values) > 1))
 
 	def createDuplname(self):
