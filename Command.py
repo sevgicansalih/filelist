@@ -7,7 +7,7 @@ import re
 import zipfile
 from collections import deque
 
-optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
+optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-nofilelist','-stats']
 
 current_files = []
 global_files = []
@@ -101,7 +101,7 @@ class Command():
 		self.pathlist = pathlist
 		self.parameter = parameter
 		# Burasi execute ettigimiz yer burayi sortladiktan sonra teker teker cagiracagiz
-		self.createCommand()
+		#self.createCommand()
 
 	def getCommandType(self):
 		return self.commandType
