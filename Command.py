@@ -3,6 +3,7 @@ import pwd
 import sys
 import datetime
 import subprocess
+import re
 from collections import deque
 
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
@@ -75,7 +76,7 @@ class Command():
 		self.pathlist = pathlist
 		self.parameter = parameter
 		# Burasi execute ettigimiz yer burayi sortladiktan sonra teker teker cagiracagiz
-		#self.createCommand()
+		self.createCommand()
 
 	def getCommandType(self):
 		return self.commandType
@@ -144,8 +145,21 @@ class Command():
 				current_files.append(file)
 		global_files = current_files[:] if len(current_files) == 0 else intersection(global_files, current_files)
 		current_files = []
+
 	def createMatch(self):
-		pass
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		pattern = self.parameter
+		print 'pattern ', pattern
+		curentList = []
+		prog = re.compile(pattern,re.DOTALL)
+		for file in file_names:
+			index = file.rfind('/')
+			filename = file[index+1:] if index != 1 else file
+			result = bool(prog.search(file))
+			print result, " ", filename
+
+
 	def createBigger(self):
 		pass
 	def createSmaller(self):
