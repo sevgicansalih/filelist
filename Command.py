@@ -3,7 +3,11 @@ import pwd
 import sys
 import datetime
 import subprocess
+<<<<<<< HEAD
 import re
+=======
+import zipfile
+>>>>>>> 10ce0a71e515ac0c188effb101b9c29ad72b0d52
 from collections import deque
 
 optionsList = ['-before','-after','-match','-bigger','-smaller','-delete','-zip','-duplcont','-duplname','-stats','-nofilelist']
@@ -110,42 +114,44 @@ class Command():
 			self.createNofile()
 
 	def createBefore(self):
-		print 'cbcbcbc'
+		print 'before'
 		global global_files
 		global current_files
 		param = self.parameter
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
-		print file_names
+		#print file_names
 		for file in file_names:
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
-			print datetime.datetime.fromtimestamp(modtime).strftime('%Y%m%dT%H%M%S')
 			if filetime < date : 
 				current_files.append(file)
 		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
-		print global_files
+		print 'gb\n' , global_files
 
 	def createAfter(self):
-		print 'cacacaca'
+		print 'after'
 		global global_files
 		global current_files
 		param = self.parameter
 		date = datetime.datetime.strptime(param,'%Y%m%dT%H%M%S') if len(param) > 9 else datetime.datetime.strptime(param,'%Y%m%d')
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
-		print file_names
+		#print file_names
 		for file in file_names:
 			modtime = os.path.getmtime(file)
 			filetime = datetime.datetime.fromtimestamp(modtime)
-			print datetime.datetime.fromtimestamp(modtime).strftime('%Y%m%dT%H%M%S')
 			if filetime > date : 
 				current_files.append(file)
-		global_files = current_files[:] if len(current_files) == 0 else intersection(global_files, current_files)
+		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
 		current_files = []
+<<<<<<< HEAD
 
+=======
+		print 'gb\n' , global_files
+>>>>>>> 10ce0a71e515ac0c188effb101b9c29ad72b0d52
 	def createMatch(self):
 		qlist = deque(self.pathlist)
 		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
@@ -161,13 +167,63 @@ class Command():
 
 
 	def createBigger(self):
-		pass
+		print 'bigger'
+		global global_files
+		global current_files
+		param = self.parameter
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		#print file_names
+		for file in file_names:
+			st = os.stat(file)
+			filesize = st.st_size
+			print(file)
+			print(filesize)
+			if filesize >= int(param) : 
+				current_files.append(file)
+		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
+		current_files = []
+		print 'gb\n' , global_files
 	def createSmaller(self):
-		pass
+		print 'smaller'
+		global global_files
+		global current_files
+		param = self.parameter
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+		#print file_names
+		for file in file_names:
+			st = os.stat(file)
+			filesize = st.st_size
+			if filesize <= int(param) : 
+				current_files.append(file)
+		global_files = current_files[:] if len(global_files) == 0 else intersection(global_files, current_files)
+		current_files = []
+		print 'gb\n' , global_files
 	def createDelete(self):
-		pass
+		print 'delete'
+		global global_files
+		global current_files
+		param = self.parameter
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+
+		for file in file_names:
+			os.remove(file)
 	def createZip(self):
-		pass
+		print 'zip'
+		global global_files
+		global current_files
+		param = self.parameter
+		zipf = zipfile.ZipFile(param, 'w', zipfile.ZIP_DEFLATED)
+
+		qlist = deque(self.pathlist)
+		file_names = global_files[:] if len(global_files) > 0 else file_traverser(qlist)
+
+		for file in file_names:
+			zipf.write(file)
+
+		zipf.close()
 	def createDuplcont(self):
 		pass
 	def createDuplname(self):
